@@ -1,10 +1,12 @@
 package com.ibm.demo.controller;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +41,10 @@ public class DemoController {
 	}
 
 	private Map<String, TreeMap<?, ?>> result( HttpServletRequest request, String json ) {
-		return ImmutableMap.of( request.getRequestURI(), new Gson().fromJson( json, TreeMap.class ) );
+		// 觀察有時服務發現異常或服務提供者剛起來時拿到的資訊可能會是null... 所以加個預設值
+		log.info( "json: " + json + ", isNull: " + Objects.isNull( json ) );
+
+		return ImmutableMap.of( request.getRequestURI(), new Gson().fromJson( StringUtils.defaultString( json, "{}" ), TreeMap.class ) );
 	}
 
 	public Map<String, TreeMap<?, ?>> fallback( HttpServletRequest request ) {
