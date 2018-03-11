@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: cloud-client
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://peer1:8761/eureka/,http://peer2:8762/eureka/
+  instance:
+    prefer-ip-address: true
+---
+spring:
+  profiles: ribbon
+eureka:
+  instance:
+    hostname: peer1
+server:
+  port: 8765
+ribbon:
+  eureka:
+    enabled: true
+---
+spring:
+  profiles: feign
+eureka:
+  instance:
+    hostname: peer2
+server:
+  port: 8766
+feign:
+  hystrix:
+    enabled: true
